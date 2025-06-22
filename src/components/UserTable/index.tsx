@@ -10,8 +10,11 @@
 справа вверху кнопка создания юзера
 */
 
+import type { ColumnsType } from 'antd/es/table';
 import { UserTableContainer } from './index.styles';
 import { Table, Button, Space } from 'antd';
+import { useMemo } from 'react';
+import type { IDataType } from '../../entities/UserTable';
 
 const mockUsersData = [
   {
@@ -97,46 +100,49 @@ const mockUsersData = [
 ];
 
 export function UserTable () {
-  const columns = [
-    {
-      title: 'Имя',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Фамилия',
-      dataIndex: 'lastName',
-      key: 'lastName',
-    },
-    {
-      title: 'Возраст',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: 'Телефон',
-      dataIndex: 'phone',
-      key: 'phone',
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'Действия',
-      key: 'actions',
-      dataIndex: 'actions',
-      render: function () {
-        return (
-          <Space size="middle">
-            <Button type="link" onClick={handleEdit}>Редактировать</Button>
-            <Button type="link" danger onClick={handleDelete}>Удалить</Button>
-          </Space>
-        )
+  const columns: ColumnsType<IDataType> = useMemo(
+    () => [
+      {
+        title: 'Имя',
+        dataIndex: 'name',
+        key: 'name',
       },
-    },
-  ];
+      {
+        title: 'Фамилия',
+        dataIndex: 'lastName',
+        key: 'lastName',
+      },
+      {
+        title: 'Возраст',
+        dataIndex: 'age',
+        key: 'age',
+      },
+      {
+        title: 'Телефон',
+        dataIndex: 'phone',
+        key: 'phone',
+      },
+      {
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email',
+      },
+      {
+        title: 'Действия',
+        key: 'actions',
+        dataIndex: 'actions',
+        render: function () {
+          return (
+            <Space size="middle">
+              <Button type="link" onClick={handleEdit}>Редактировать</Button>
+              <Button type="link" danger onClick={handleDelete}>Удалить</Button>
+            </Space>
+          )
+        }
+      }
+    ],
+    [mockUsersData],
+  );
 
   const handleEdit = () => {
     alert('Редактировать пользователя');
