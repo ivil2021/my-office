@@ -126,6 +126,7 @@ export function UserTable () {
     {
       title: 'Действия',
       key: 'actions',
+      dataIndex: 'actions',
       render: function () {
         return (
           <Space size="middle">
