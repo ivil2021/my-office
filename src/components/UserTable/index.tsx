@@ -14,7 +14,7 @@ import { useState, useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 import { Table, Button, Space, Modal } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { getAllUsers, createUser, deleteUser } from '../../api/user';
+import { getAllUsers, createUser, deleteUser, getOneUserDataById, editOneUserDataById } from '../../api/user';
 import type { IUser } from '../../entities/User';
 import { useRegistrationForm } from "./useRegistrationForm";
 import { UserTableContainer, FormContainer, TextError } from './index.styles';
@@ -28,7 +28,7 @@ export function UserTable () {
   const handleCancel = () => setIsModalOpen(false);
 
   const newUserData = {
-    id: form.values.id,
+    id: -1,
     name: form.values.name,
     lastName: form.values.lastName,
     age: form.values.age,
@@ -45,7 +45,6 @@ export function UserTable () {
     'user',
     async () => createUser(newUserData),
   );
-
 
   const columns: ColumnsType<IUser> = useMemo(
     () => [
@@ -80,7 +79,7 @@ export function UserTable () {
         dataIndex: 'actions',
         render: (_, record) => (
           <Space size="middle">
-            <Button type="link" onClick={() => console.log('Edit user')}>Редактировать</Button>
+            <Button type="link" onClick={() => handleEdit(record.id)}>Редактировать</Button>
             <Button type="link" danger onClick={() => handleDelete(record.id)}>Удалить</Button>
           </Space>
         ),
@@ -89,14 +88,32 @@ export function UserTable () {
     [users],
   );
 
-  // const handleCreateUser = () => console.log('Create user');
-
   const handleDelete = async (id: number) => {
     try {
-      console.log(`Данные удаленного пользователя с id ${id}:`, await deleteUser(id));
-      mutate('users');
+      const deletedUserData = await deleteUser(id)
+      console.log(`Данные удаленного пользователя с id ${id}:`, deletedUserData);
+
+      await mutate('users');
     } catch (error) {
-      console.error('Ошибка при удалении:', error);
+      console.error('Ошибка при удалении пользователя:', error);
+    }
+  };
+
+  const handleEdit = async (id: number) => {
+    try {
+      // получаем данные пользователя по его id
+      const foundUserData = await getOneUserDataById(id);
+      console.log(`Данные пользователя, найденного по его id ${id}:`, foundUserData);
+
+      // открываем модальное окно
+      showModal();
+
+      // редактируем данные пользователя
+      await editOneUserDataById(id, newUserData);
+
+      await mutate('users');
+    } catch (error) {
+      console.error('Ошибка при редактировании данных пользователя:', error);
     }
   };
 
@@ -114,7 +131,6 @@ export function UserTable () {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        footer={null}
       >
         <FormContainer>
           <div>
@@ -193,13 +209,6 @@ export function UserTable () {
             )}
           </div>
 
-          <button
-            type="submit"
-            disabled={form.isValid}
-            // onClick={handleCreateUser}
-          >
-            Создать
-          </button>
         </FormContainer>
       </Modal>
       <Table 
