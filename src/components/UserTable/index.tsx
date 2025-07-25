@@ -24,7 +24,13 @@ export function UserTable () {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => setIsModalOpen(true);
-  const handleOk = () => setIsModalOpen(false);
+
+  const handleOk = async () => {
+    await createUser(newUserData);
+    setIsModalOpen(false);
+    await mutate('users');
+  };
+
   const handleCancel = () => setIsModalOpen(false);
 
   const newUserData = {
@@ -36,15 +42,10 @@ export function UserTable () {
     email: form.values.email
   };
 
-  const { data: users } = useSWR(
-    'users',
-    async () => getAllUsers(),
-  );
-
-  const {} = useSWR(
-    'user',
-    async () => createUser(newUserData),
-  );
+    const { data: users } = useSWR(
+      'users',
+      async () => getAllUsers(),
+    );
 
   const columns: ColumnsType<IUser> = useMemo(
     () => [

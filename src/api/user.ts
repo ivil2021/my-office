@@ -55,11 +55,11 @@ export async function getOneUserDataById(id: number) {
   }
 }
 
-export async function editOneUserDataById(id: number, newUser: IUser) {
+export async function editOneUserDataById(id: number, editedUserData: IUser) {
   console.log('editOneUserDataById was started');
   try {
     const response = await axios.put(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`,
-      newUser,
+      editedUserData,
       {
         headers: { 'Content-Type': 'application/json' },
       }
