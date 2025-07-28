@@ -3,18 +3,16 @@ import type { IUser } from '../entities/User';
 
 export async function getAllUsers() {
   try {
-    console.log('getAllUsers was started');
     const response = await axios.get<IUser[]>('https://68586580138a18086dfadfb1.mockapi.io/users');
 
     return response.data;
   } catch (error) {
-    throw new Error('Ошибка при запросе всех пользователей');
+    throw new Error('Ошибка при запросе данных всех пользователей');
   }
 }
 
 export async function createUser(newUser: IUser) {
   try {
-    console.log('createUser was started');
     const response = await axios.post<IUser>(
       'https://68586580138a18086dfadfb1.mockapi.io/users',
       newUser,
@@ -32,7 +30,6 @@ export async function createUser(newUser: IUser) {
 }
 
 export async function deleteUser(id: number) {
-  console.log('getAllUsers was started');
   const response = await fetch(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`, {
     method: 'DELETE',
   });
@@ -46,7 +43,6 @@ export async function deleteUser(id: number) {
 
 export async function getOneUserDataById(id: number) {
   try {
-    console.log('getOneUserDataById was started');
     const response = await axios.get<IUser[]>(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`);
 
     return response.data;
@@ -56,7 +52,6 @@ export async function getOneUserDataById(id: number) {
 }
 
 export async function editOneUserDataById(id: number, editedUserData: IUser) {
-  console.log('editOneUserDataById was started');
   try {
     const response = await axios.put(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`,
       editedUserData,
@@ -67,6 +62,6 @@ export async function editOneUserDataById(id: number, editedUserData: IUser) {
 
     return response.data;
   } catch (error) {
-    throw new Error('Ошибка при обновлении пользователя');
+    throw new Error('Ошибка при обновлении данных пользователя');
   }
 }

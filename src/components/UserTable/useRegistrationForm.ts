@@ -36,7 +36,12 @@ export function useRegistrationForm() {
     validationSchema,
   });
 
+  const setFormValues = (newValues: { name: string; lastName: string; age: string; phone: string; email: string; }) => {
+    form.setValues(newValues);
+  };
+
   return {
-    form
+    form,
+    setFormValues
   }
 }

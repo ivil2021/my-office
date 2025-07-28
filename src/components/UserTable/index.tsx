@@ -14,24 +14,52 @@ import { useState, useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 import { Table, Button, Space, Modal } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { getAllUsers, createUser, deleteUser, getOneUserDataById, editOneUserDataById } from '../../api/user';
+import { getAllUsers, createUser, deleteUser, editOneUserDataById } from '../../api/user';
 import type { IUser } from '../../entities/User';
 import { useRegistrationForm } from "./useRegistrationForm";
 import { UserTableContainer, FormContainer, TextError } from './index.styles';
 
 export function UserTable () {
-  const { form } = useRegistrationForm();
+  const { form, setFormValues } = useRegistrationForm();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => setIsModalOpen(true);
 
+  const [editingUserId, setEditingUserId] = useState<number | null>(null);
+
   const handleOk = async () => {
-    await createUser(newUserData);
-    setIsModalOpen(false);
-    await mutate('users');
+    if (editingUserId) {
+      try {
+        await editOneUserDataById(editingUserId, {
+          id: editingUserId,
+          name: form.values.name,
+          lastName: form.values.lastName,
+          age: form.values.age,
+          phone: form.values.phone,
+          email: form.values.email,
+        });
+        await mutate('users');
+
+        setIsModalOpen(false);
+
+        setEditingUserId(null);
+      } catch (error) {
+        console.error('Ошибка при обновлении данных пользователя:', error);
+      }
+    } else {
+      await createUser(newUserData);
+
+      setIsModalOpen(false);
+
+      await mutate('users');
+    }
   };
 
-  const handleCancel = () => setIsModalOpen(false);
+  const handleCancel = () => {
+    setIsModalOpen(false);
+
+    setEditingUserId(null);
+  };
 
   const newUserData = {
     id: -1,
@@ -42,10 +70,7 @@ export function UserTable () {
     email: form.values.email
   };
 
-    const { data: users } = useSWR(
-      'users',
-      async () => getAllUsers(),
-    );
+  const { data: users } = useSWR( 'users', getAllUsers );
 
   const columns: ColumnsType<IUser> = useMemo(
     () => [
@@ -91,8 +116,7 @@ export function UserTable () {
 
   const handleDelete = async (id: number) => {
     try {
-      const deletedUserData = await deleteUser(id)
-      console.log(`Данные удаленного пользователя с id ${id}:`, deletedUserData);
+      await deleteUser(id);
 
       await mutate('users');
     } catch (error) {
@@ -102,17 +126,17 @@ export function UserTable () {
 
   const handleEdit = async (id: number) => {
     try {
-      // получаем данные пользователя по его id
-      const foundUserData = await getOneUserDataById(id);
-      console.log(`Данные пользователя, найденного по его id ${id}:`, foundUserData);
+      setFormValues({
+        name: form.values.name,
+        lastName: form.values.lastName,
+        age: form.values.age,
+        phone: form.values.phone,
+        email: form.values.email
+      });
 
-      // открываем модальное окно
+      setEditingUserId(id);
+
       showModal();
-
-      // редактируем данные пользователя
-      await editOneUserDataById(id, newUserData);
-
-      await mutate('users');
     } catch (error) {
       console.error('Ошибка при редактировании данных пользователя:', error);
     }
