@@ -15,7 +15,6 @@ import useSWR, { mutate } from 'swr';
 import { Table, Button, Space, Modal } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { getAllUsers, createUser, deleteUser, editOneUserDataById } from '../../api/user';
-import type { IUser } from '../../entities/User';
 import { useRegistrationForm } from "../../hooks/useRegistrationForm";
 import { UserTableContainer, FormContainer, TextError } from './index.styles';
 
@@ -72,7 +71,16 @@ export function UserTable () {
 
   const { data: users } = useSWR( 'users', getAllUsers );
 
-  const columns: ColumnsType<IUser> = useMemo(
+  interface DataType {
+    id: number;
+    name: string;
+    lastName: string;
+    age: string;
+    phone: string;
+    email: string;
+  }
+
+  const columns: ColumnsType<DataType> = useMemo(
     () => [
       {
         title: 'Имя',
