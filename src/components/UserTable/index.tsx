@@ -16,7 +16,7 @@ import { Table, Button, Space, Modal } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { getAllUsers, createUser, deleteUser, editOneUserDataById } from '../../api/user';
 import type { IUser } from '../../entities/User';
-import { useRegistrationForm } from "./useRegistrationForm";
+import { useRegistrationForm } from "../../hooks/useRegistrationForm";
 import { UserTableContainer, FormContainer, TextError } from './index.styles';
 
 export function UserTable () {
