@@ -30,15 +30,13 @@ export async function createUser(newUser: IUser) {
 }
 
 export async function deleteUser(id: number) {
-  const response = await fetch(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`, {
-    method: 'DELETE',
-  });
+  try {
+    const response = await axios.delete(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`);
 
-  if (!response.ok) {
+    return response.data;
+  } catch (error) {
     throw new Error('Ошибка при удалении пользователя');
   }
-
-  return response.json();
 }
 
 export async function getOneUserDataById(id: number) {
