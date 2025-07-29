@@ -17,6 +17,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { getAllUsers, createUser, deleteUser, editOneUserDataById } from '../../api/user';
 import { useRegistrationForm } from "../../hooks/useRegistrationForm";
 import { UserTableContainer, FormContainer, TextError } from './index.styles';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 export function UserTable () {
   const { form, setFormValues } = useRegistrationForm();
@@ -113,8 +114,8 @@ export function UserTable () {
         dataIndex: 'actions',
         render: (_, record) => (
           <Space size="middle">
-            <Button type="link" onClick={() => handleEdit(record.id)}>Редактировать</Button>
-            <Button type="link" danger onClick={() => handleDelete(record.id)}>Удалить</Button>
+            <Button type="text" icon={<EditOutlined />} onClick={() => handleEdit(record.id)} />
+            <Button type="text" icon={<DeleteOutlined />} onClick={() => handleDelete(record.id)} danger />
           </Space>
         ),
       }
