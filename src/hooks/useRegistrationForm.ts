@@ -26,11 +26,11 @@ const validationSchema = Yup.object().shape({
 export function useRegistrationForm() {
   const form = useFormik({
     initialValues: {
-      name: 'name1',
-      lastName: 'lastName1',
-      age: '11',
-      phone: '11111111111',
-      email: 'test1@gmail.com'
+      name: '',
+      lastName: '',
+      age: '',
+      phone: '',
+      email: ''
     },
     onSubmit: () => {},
     validationSchema,
