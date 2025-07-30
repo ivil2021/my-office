@@ -14,7 +14,7 @@ import { useState, useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 import { Table, Button, Space, Modal } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { getAllUsers, createUser, deleteUser, editOneUserDataById } from '../../api/user';
+import { getAllUsers, createUser, deleteUser, editOneUser } from '../../api/user';
 import { useRegistrationForm } from "../../hooks/useRegistrationForm";
 import { UserTableContainer, FormContainer, TextError } from './index.styles';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -30,7 +30,7 @@ export function UserTable () {
   const handleOk = async () => {
     if (editingUserId) {
       try {
-        await editOneUserDataById(editingUserId, {
+        await editOneUser(editingUserId, {
           id: editingUserId,
           name: form.values.name,
           lastName: form.values.lastName,
