@@ -51,7 +51,11 @@ export async function deleteUser({ id }: IDeleteUser) {
   }
 }
 
-export async function getOneUser(id: number) {
+export interface IGetOneUser {
+  id: number;
+}
+
+export async function getOneUser({ id }: IGetOneUser) {
   try {
     const response = await axios.get(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`);
 
