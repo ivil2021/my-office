@@ -125,7 +125,7 @@ export function UserTable () {
 
   const handleDelete = async (id: number) => {
     try {
-      await deleteUser(id);
+      await deleteUser({ id });
 
       await mutate('users');
     } catch (error) {

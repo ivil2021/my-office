@@ -37,7 +37,11 @@ export async function createUser({ name, lastName, age, phone, email }: ICreateU
   }
 }
 
-export async function deleteUser(id: number) {
+export interface IDeleteUser {
+  id: number;
+}
+
+export async function deleteUser({ id }: IDeleteUser) {
   try {
     const response = await axios.delete(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`);
 
