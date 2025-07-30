@@ -51,9 +51,9 @@ export async function deleteUser({ id }: IDeleteUser) {
   }
 }
 
-export async function getOneUserDataById(id: number) {
+export async function getOneUser(id: number) {
   try {
-    const response = await axios.get<IUser[]>(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`);
+    const response = await axios.get(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`);
 
     return response.data;
   } catch (error) {
