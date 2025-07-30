@@ -3,7 +3,7 @@ import type { IUser } from '../entities/User';
 
 export async function getAllUsers() {
   try {
-    const response = await axios.get<IUser[]>('https://68586580138a18086dfadfb1.mockapi.io/users');
+    const response = await axios.get('https://68586580138a18086dfadfb1.mockapi.io/users');
 
     return response.data;
   } catch (error) {
