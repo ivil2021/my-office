@@ -11,11 +11,19 @@ export async function getAllUsers() {
   }
 }
 
-export async function createUser(newUser: IUser) {
+export interface ICreateUser {
+  name: string;
+  lastName: string;
+  age: string;
+  phone: string;
+  email: string;
+}
+
+export async function createUser({ name, lastName, age, phone, email }: ICreateUser) {
   try {
-    const response = await axios.post<IUser>(
+    const response = await axios.post(
       'https://68586580138a18086dfadfb1.mockapi.io/users',
-      newUser,
+      { name, lastName, age, phone, email },
       {
         headers: {
           'Content-Type': 'application/json',
