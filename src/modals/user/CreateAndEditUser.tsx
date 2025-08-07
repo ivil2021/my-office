@@ -1,10 +1,48 @@
 import { Modal } from 'antd';
 import { FormContainer, TextError } from './index.styles';
 
-export function CreateUser({ isModalOpen, handleOk, handleCancel, form }: any) {
+interface ICreateAndEditUserProps {
+  title: string;
+  isModalOpen: boolean;
+  handleOk: () => void;
+  handleCancel: () => void;
+  form: {
+    values: { 
+      name: string;
+      lastName: string;
+      age: string;
+      phone: string;
+      email: string;
+    };
+    errors: {
+      name?: string;
+      lastName?: string;
+      age?: string;
+      phone?: string;
+      email?: string;
+    };
+    touched: {
+      name?: boolean;
+      lastName?: boolean;
+      age?: boolean;
+      phone?: boolean;
+      email?: boolean;
+    };
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+  };
+}
+
+export function CreateAndEditUser({
+  title,
+  isModalOpen,
+  handleOk,
+  handleCancel,
+  form
+}: ICreateAndEditUserProps) {
   return (
     <Modal
-        title="Создание нового пользователя"
+        title={title}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}

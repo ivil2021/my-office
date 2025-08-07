@@ -1,5 +1,4 @@
 import axios from 'axios';
-import type { IUser } from '../entities/User';
 
 export async function getAllUsers() {
   try {
@@ -11,7 +10,7 @@ export async function getAllUsers() {
   }
 }
 
-export interface ICreateUser {
+interface ICreateUser {
   name: string;
   lastName: string;
   age: string;
@@ -37,7 +36,7 @@ export async function createUser({ name, lastName, age, phone, email }: ICreateU
   }
 }
 
-export interface IDeleteUser {
+interface IDeleteUser {
   id: number;
 }
 
@@ -51,7 +50,7 @@ export async function deleteUser({ id }: IDeleteUser) {
   }
 }
 
-export interface IGetOneUser {
+interface IGetOneUser {
   id: number;
 }
 
@@ -61,14 +60,23 @@ export async function getOneUser({ id }: IGetOneUser) {
 
     return response.data;
   } catch (error) {
-    throw new Error('Ошибка при получении данных одного пользователя по его id');
+    throw new Error('Ошибка при получении данных одного пользователя');
   }
 }
 
-export async function editOneUser(id: number, editedUserData: IUser) {
+interface IEditUser {
+  id: number;
+  name: string;
+  lastName: string;
+  age: string;
+  phone: string;
+  email: string;
+}
+
+export async function editUser({ id, name, lastName, age, phone, email }: IEditUser) {
   try {
     const response = await axios.put(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`,
-      editedUserData,
+      { name, lastName, age, phone, email },
       {
         headers: { 'Content-Type': 'application/json' },
       }

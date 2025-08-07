@@ -14,24 +14,41 @@ import { useState, useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 import { Table, Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { getAllUsers, createUser, deleteUser, editOneUser } from '../../api/user';
-import { useRegistrationForm } from "../../hooks/useRegistrationForm";
-import { UserTableContainer } from './index.styles';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { CreateUser } from '../../modals/user/CreateUser';
+import { getAllUsers, createUser, deleteUser, getOneUser, editUser } from '../../api/user';
+import { useRegistrationForm } from "../../hooks/useRegistrationForm";
+import { CreateAndEditUser } from '../../modals/user/CreateAndEditUser';
+import { UserTableContainer } from './index.styles';
 
 export function UserTable () {
   const { form, setFormValues } = useRegistrationForm();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => setIsModalOpen(true);
+  const hideModal = () => setIsModalOpen(false);
 
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
 
-  const handleOk = async () => {
-    if (editingUserId) {
+  function handleCreate() {
+    setFormValues({ name: '', lastName: '', age: '', phone: '', email: '' });
+    showModal();
+  };
+
+  async function handleOk() {
+    if (!editingUserId) {
+      await createUser({
+        name: form.values.name,
+        lastName: form.values.lastName,
+        age: form.values.age,
+        phone: form.values.phone,
+        email: form.values.email
+      });
+      await mutate('users');
+
+      hideModal();
+    } else {
       try {
-        await editOneUser(editingUserId, {
+        await editUser({
           id: editingUserId,
           name: form.values.name,
           lastName: form.values.lastName,
@@ -41,34 +58,37 @@ export function UserTable () {
         });
         await mutate('users');
 
-        setIsModalOpen(false);
-
         setEditingUserId(null);
+        hideModal();
       } catch (error) {
-        console.error('Ошибка при обновлении данных пользователя:', error);
+        console.error('Ошибка при обновлении данных пользователя', error);
       }
-    } else {
-      await createUser(newUserData);
-
-      setIsModalOpen(false);
-
-      await mutate('users');
     }
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-
+  function handleCancel() {
     setEditingUserId(null);
+    hideModal();
   };
 
-  const newUserData = {
-    id: -1,
-    name: form.values.name,
-    lastName: form.values.lastName,
-    age: form.values.age,
-    phone: form.values.phone,
-    email: form.values.email
+  async function handleEdit(id: number) {
+    try {
+      const editingUserData = await getOneUser({ id });
+      setFormValues(editingUserData);
+      setEditingUserId(id);
+      showModal();
+    } catch (error) {
+      console.error('Ошибка при редактировании данных пользователя', error);
+    }
+  };
+
+  async function handleDelete(id: number) {
+    try {
+      await deleteUser({ id });
+      await mutate('users');
+    } catch (error) {
+      console.error('Ошибка при удалении пользователя', error);
+    }
   };
 
   const { data: users } = useSWR( 'users', getAllUsers );
@@ -80,6 +100,7 @@ export function UserTable () {
     age: string;
     phone: string;
     email: string;
+    actions: string[];
   }
 
   const columns: ColumnsType<DataType> = useMemo(
@@ -121,47 +142,20 @@ export function UserTable () {
         ),
       }
     ],
-    [users],
+    [users]
   );
-
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteUser({ id });
-
-      await mutate('users');
-    } catch (error) {
-      console.error('Ошибка при удалении пользователя:', error);
-    }
-  };
-
-  const handleEdit = async (id: number) => {
-    try {
-      setFormValues({
-        name: form.values.name,
-        lastName: form.values.lastName,
-        age: form.values.age,
-        phone: form.values.phone,
-        email: form.values.email
-      });
-
-      setEditingUserId(id);
-
-      showModal();
-    } catch (error) {
-      console.error('Ошибка при редактировании данных пользователя:', error);
-    }
-  };
 
   return (
     <UserTableContainer>
       <Button 
         type="primary"
         style={{ position:'absolute', top:20, right:20 }}
-        onClick={showModal}
+        onClick={handleCreate}
       >
         Создать пользователя
       </Button>
-      <CreateUser
+      <CreateAndEditUser
+        title={`${editingUserId ? 'Редактирование' : 'Создание'} пользователя`}
         isModalOpen={isModalOpen}
         handleOk={handleOk}
         handleCancel={handleCancel}
