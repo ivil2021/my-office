@@ -11,86 +11,29 @@
 */
 
 import { useState, useMemo } from 'react';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import { Table, Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { getAllUsers, createUser, deleteUser, getOneUser, editUser } from '../../api/user';
+import { getAllUsers, createUser, editUser } from '../../api/user';
 import { useRegistrationForm } from "../../hooks/useRegistrationForm";
 import { CreateAndEditUser } from '../../modals/user/CreateAndEditUser';
 import { UserTableContainer } from './index.styles';
 
+import { useUserModal } from './useUserModal';
+import { useUserActions } from './useUserActions';
+import { useUserEdit } from './useUserEdit';
+import { useHandleOk } from './useHandleOk';
+import { useHandleCancel } from './useHandleCancel';
+
 export function UserTable () {
+  const { isModalOpen, showModal, hideModal, handleCreate } = useUserModal()
+  const { handleDelete } = useUserActions();
   const { form, setFormValues } = useRegistrationForm();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => setIsModalOpen(true);
-  const hideModal = () => setIsModalOpen(false);
-
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
-
-  function handleCreate() {
-    setFormValues({ name: '', lastName: '', age: '', phone: '', email: '' });
-    showModal();
-  };
-
-  async function handleOk() {
-    if (!editingUserId) {
-      await createUser({
-        name: form.values.name,
-        lastName: form.values.lastName,
-        age: form.values.age,
-        phone: form.values.phone,
-        email: form.values.email
-      });
-      await mutate('users');
-
-      hideModal();
-    } else {
-      try {
-        await editUser({
-          id: editingUserId,
-          name: form.values.name,
-          lastName: form.values.lastName,
-          age: form.values.age,
-          phone: form.values.phone,
-          email: form.values.email,
-        });
-        await mutate('users');
-
-        setEditingUserId(null);
-        hideModal();
-      } catch (error) {
-        console.error('Ошибка при обновлении данных пользователя', error);
-      }
-    }
-  };
-
-  function handleCancel() {
-    setEditingUserId(null);
-    hideModal();
-  };
-
-  async function handleEdit(id: number) {
-    try {
-      const editingUserData = await getOneUser({ id });
-      setFormValues(editingUserData);
-      setEditingUserId(id);
-      showModal();
-    } catch (error) {
-      console.error('Ошибка при редактировании данных пользователя', error);
-    }
-  };
-
-  async function handleDelete(id: number) {
-    try {
-      await deleteUser({ id });
-      await mutate('users');
-    } catch (error) {
-      console.error('Ошибка при удалении пользователя', error);
-    }
-  };
-
+  const { handleEdit } = useUserEdit({ setFormValues, setEditingUserId, showModal });
+  const handleOk = useHandleOk({ form, setEditingUserId, hideModal, createUser, editUser });
+  const handleCancel = useHandleCancel({ setEditingUserId, hideModal });
   const { data: users } = useSWR( 'users', getAllUsers );
 
   interface DataType {
