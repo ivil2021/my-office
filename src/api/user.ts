@@ -50,20 +50,6 @@ export async function deleteUser({ id }: IDeleteUser) {
   }
 }
 
-interface IGetOneUser {
-  id: number;
-}
-
-export async function getOneUser({ id }: IGetOneUser) {
-  try {
-    const response = await axios.get(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`);
-
-    return response.data;
-  } catch (error) {
-    throw new Error('Ошибка при получении данных одного пользователя');
-  }
-}
-
 interface IEditUser {
   id: number;
   name: string;

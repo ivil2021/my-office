@@ -11,30 +11,58 @@
 */
 
 import { useState, useMemo } from 'react';
-import useSWR from 'swr';
+import { mutate } from 'swr';
 import { Table, Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { getAllUsers, createUser, editUser } from '../../api/user';
-import { useRegistrationForm } from "../../hooks/useRegistrationForm";
+import { deleteUser } from '../../api/user';
+import { useCreateAndEditUser } from "../../modals/user/useCreateAndEditUser";
 import { CreateAndEditUser } from '../../modals/user';
 import { UserTableContainer } from './index.styles';
 
-import { useUserModal } from './useUserModal';
-import { useUserActions } from './useUserActions';
-import { useUserEdit } from './useUserEdit';
-import { useHandleOk } from './useHandleOk';
-import { useHandleCancel } from './useHandleCancel';
-
 export function UserTable () {
-  const { isModalOpen, showModal, hideModal, handleCreate } = useUserModal()
-  const { handleDelete } = useUserActions();
-  const { form, setFormValues } = useRegistrationForm();
+  const { setFormValues, users, handleOk, showModal, isModalOpen, handleCancel } = useCreateAndEditUser();
+
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
-  const { handleEdit } = useUserEdit({ setFormValues, setEditingUserId, showModal });
-  const handleOk = useHandleOk({ form, setEditingUserId, hideModal, createUser, editUser });
-  const handleCancel = useHandleCancel({ setEditingUserId, hideModal });
-  const { data: users } = useSWR( 'users', getAllUsers );
+
+  function handleCreate() {
+    setFormValues({ name: '', lastName: '', age: '', phone: '', email: '' });
+    showModal();
+  };
+
+  interface IEditUser {
+    id: number;
+    name: string;
+    lastName: string;
+    age: string;
+    phone: string;
+    email: string;
+  }
+
+  async function handleEdit({ id, name, lastName, age, phone, email }: IEditUser) {
+    try {
+      setFormValues({
+        name: name,
+        lastName: lastName,
+        age: age,
+        phone: phone,
+        email: email
+      });
+      setEditingUserId(id);
+      showModal();
+    } catch (error) {
+      console.error('Ошибка при редактировании данных пользователя', error);
+    }
+  };
+
+  async function handleDelete(id: number) {
+    try {
+      await deleteUser({ id });
+      await mutate('users');
+    } catch (error) {
+      console.error('Ошибка при удалении пользователя', error);
+    }
+  };
 
   interface DataType {
     id: number;
@@ -79,7 +107,7 @@ export function UserTable () {
         dataIndex: 'actions',
         render: (_, record) => (
           <Space size="middle">
-            <Button type="text" icon={<EditOutlined />} onClick={() => handleEdit(record.id)} />
+            <Button type="text" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
             <Button type="text" icon={<DeleteOutlined />} onClick={() => handleDelete(record.id)} danger />
           </Space>
         ),
@@ -102,7 +130,6 @@ export function UserTable () {
         isModalOpen={isModalOpen}
         handleOk={handleOk}
         handleCancel={handleCancel}
-        form={form}
       />
       <Table 
         columns={columns}
