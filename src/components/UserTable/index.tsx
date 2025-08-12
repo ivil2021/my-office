@@ -17,7 +17,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getAllUsers, createUser, editUser } from '../../api/user';
 import { useRegistrationForm } from "../../hooks/useRegistrationForm";
-import { CreateAndEditUser } from '../../modals/user/CreateAndEditUser';
+import { CreateAndEditUser } from '../../modals/user';
 import { UserTableContainer } from './index.styles';
 
 import { useUserModal } from './useUserModal';
