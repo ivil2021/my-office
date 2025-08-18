@@ -1,0 +1,17 @@
+import { mutate } from 'swr';
+import { deleteUser } from '../../api/user';
+
+export function useUserTable() {
+  async function handleDelete(id: number) {
+    try {
+      await deleteUser({ id });
+      await mutate('users');
+    } catch (error) {
+      console.error('Ошибка при удалении пользователя', error);
+    }
+  };
+
+  return {
+    handleDelete
+  }
+};

@@ -11,17 +11,17 @@
 */
 
 import { useState, useMemo } from 'react';
-import { mutate } from 'swr';
 import { Table, Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { deleteUser } from '../../api/user';
 import { useCreateAndEditUser } from "../../modals/user/useCreateAndEditUser";
 import { CreateAndEditUser } from '../../modals/user';
 import { UserTableContainer } from './index.styles';
+import { useUserTable } from "../../components/UserTable/useUserTable";
 
 export function UserTable () {
   const { setFormValues, users, showModal, isModalOpen, handleCancel } = useCreateAndEditUser();
+  const { handleDelete } = useUserTable();
 
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
 
@@ -52,15 +52,6 @@ export function UserTable () {
       showModal();
     } catch (error) {
       console.error('Ошибка при редактировании данных пользователя', error);
-    }
-  };
-
-  async function handleDelete(id: number) {
-    try {
-      await deleteUser({ id });
-      await mutate('users');
-    } catch (error) {
-      console.error('Ошибка при удалении пользователя', error);
     }
   };
 
