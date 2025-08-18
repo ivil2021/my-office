@@ -5,17 +5,15 @@ import { useCreateAndEditUser } from "../../modals/user/useCreateAndEditUser";
 interface ICreateAndEditUserProps {
   title: string;
   isModalOpen: boolean;
-  handleOk: () => void;
   handleCancel: () => void;
 }
 
 export function CreateAndEditUser({
   title,
   isModalOpen,
-  handleOk,
   handleCancel
 }: ICreateAndEditUserProps) {
-  const { form } = useCreateAndEditUser();
+  const { form, handleOk } = useCreateAndEditUser();
 
   return (
     <Modal

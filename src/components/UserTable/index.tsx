@@ -21,7 +21,7 @@ import { CreateAndEditUser } from '../../modals/user';
 import { UserTableContainer } from './index.styles';
 
 export function UserTable () {
-  const { setFormValues, users, handleOk, showModal, isModalOpen, handleCancel } = useCreateAndEditUser();
+  const { setFormValues, users, showModal, isModalOpen, handleCancel } = useCreateAndEditUser();
 
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
 
@@ -128,7 +128,6 @@ export function UserTable () {
       <CreateAndEditUser
         title={`${editingUserId ? 'Редактирование' : 'Создание'} пользователя`}
         isModalOpen={isModalOpen}
-        handleOk={handleOk}
         handleCancel={handleCancel}
       />
       <Table 
