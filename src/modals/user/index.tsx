@@ -1,26 +1,27 @@
 import { Modal } from 'antd';
 import { FormContainer, TextError } from './index.styles';
 import { useCreateAndEditUser } from "../../modals/user/useCreateAndEditUser";
+import type { IUser } from "../../entities/user.ts";
 
 interface ICreateAndEditUserProps {
-  title: string;
-  isModalOpen: boolean;
-  handleCancel: () => void;
+  user?: IUser;
+  open: boolean;
+  onClose: () => void;
 }
 
 export function CreateAndEditUser({
-  title,
-  isModalOpen,
-  handleCancel
+  user,
+  open,
+  onClose
 }: ICreateAndEditUserProps) {
-  const { form, handleOk } = useCreateAndEditUser();
+  const { form, handleOk } = useCreateAndEditUser({ user, onClose });
 
   return (
     <Modal
-      title={title}
-      open={isModalOpen}
+      title={`${user?.id ? 'Редактирование' : 'Создание'} пользователя`}
+      open={open}
       onOk={handleOk}
-      onCancel={handleCancel}
+      onCancel={onClose}
     >
       <FormContainer>
         <div>

@@ -1,7 +1,16 @@
-import { mutate } from 'swr';
-import { deleteUser } from '../../api/user';
+import useSWR, { mutate } from 'swr';
+import { deleteUser, getAllUsers } from '../../api/user';
+import { useState } from 'react';
+import type { IUser } from "../../entities/user.ts";
+import { useModalController } from "../../hooks/useModalController.ts";
 
 export function useUserTable() {
+  const [selectedUser, setSelectedUser] = useState<IUser>();
+
+  const createAndEditUserModalController = useModalController();
+
+  const { data: users } = useSWR( 'users', getAllUsers );
+
   async function handleDelete(id: number) {
     try {
       await deleteUser({ id });
@@ -12,6 +21,10 @@ export function useUserTable() {
   };
 
   return {
-    handleDelete
+    handleDelete,
+    users,
+    selectedUser,
+    setSelectedUser,
+    createAndEditUserModalController,
   }
 };

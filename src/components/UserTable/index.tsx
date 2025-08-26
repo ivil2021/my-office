@@ -1,69 +1,29 @@
-/*
-таблица с помощью antd, 
-таблица юзеров должна принимать:
-  имя юзера
-  фамилия
-  возраст
-  номер телефона
-  эмейл
-  колона экшенов (редактирование, удаление)
-справа вверху кнопка создания юзера
-*/
-
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Table, Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useCreateAndEditUser } from "../../modals/user/useCreateAndEditUser";
 import { CreateAndEditUser } from '../../modals/user';
 import { UserTableContainer } from './index.styles';
 import { useUserTable } from "../../components/UserTable/useUserTable";
 
+interface DataType {
+  id: number;
+  name: string;
+  lastName: string;
+  age: string;
+  phone: string;
+  email: string;
+  actions: string[];
+}
+
 export function UserTable () {
-  const { setFormValues, users, showModal, isModalOpen, handleCancel } = useCreateAndEditUser();
-  const { handleDelete } = useUserTable();
-
-  const [editingUserId, setEditingUserId] = useState<number | null>(null);
-
-  function handleCreate() {
-    setFormValues({ name: '', lastName: '', age: '', phone: '', email: '' });
-    showModal();
-  };
-
-  interface IEditUser {
-    id: number;
-    name: string;
-    lastName: string;
-    age: string;
-    phone: string;
-    email: string;
-  }
-
-  async function handleEdit({ id, name, lastName, age, phone, email }: IEditUser) {
-    try {
-      setFormValues({
-        name: name,
-        lastName: lastName,
-        age: age,
-        phone: phone,
-        email: email
-      });
-      setEditingUserId(id);
-      showModal();
-    } catch (error) {
-      console.error('Ошибка при редактировании данных пользователя', error);
-    }
-  };
-
-  interface DataType {
-    id: number;
-    name: string;
-    lastName: string;
-    age: string;
-    phone: string;
-    email: string;
-    actions: string[];
-  }
+  const {
+    users,
+    handleDelete,
+    selectedUser,
+    setSelectedUser,
+    createAndEditUserModalController
+  } = useUserTable();
 
   const columns: ColumnsType<DataType> = useMemo(
     () => [
@@ -98,13 +58,13 @@ export function UserTable () {
         dataIndex: 'actions',
         render: (_, record) => (
           <Space size="middle">
-            <Button type="text" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+            <Button type="text" icon={<EditOutlined />} onClick={() => {setSelectedUser(record); createAndEditUserModalController.open}} />
             <Button type="text" icon={<DeleteOutlined />} onClick={() => handleDelete(record.id)} danger />
           </Space>
         ),
       }
     ],
-    [users]
+    [createAndEditUserModalController, handleDelete, setSelectedUser]
   );
 
   return (
@@ -112,15 +72,11 @@ export function UserTable () {
       <Button 
         type="primary"
         style={{ position:'absolute', top:20, right:20 }}
-        onClick={handleCreate}
+        onClick={createAndEditUserModalController.open}
       >
         Создать пользователя
       </Button>
-      <CreateAndEditUser
-        title={`${editingUserId ? 'Редактирование' : 'Создание'} пользователя`}
-        isModalOpen={isModalOpen}
-        handleCancel={handleCancel}
-      />
+
       <Table 
         columns={columns}
         dataSource={users}
@@ -128,6 +84,18 @@ export function UserTable () {
         pagination={{ pageSize:7 }}
         style={{ marginTop:50 }}
       />
+
+      {createAndEditUserModalController.isOpen && (
+        <CreateAndEditUser
+          user={selectedUser}
+          open={createAndEditUserModalController.isOpen}
+          onClose={() => {
+            createAndEditUserModalController.dismiss();
+            setSelectedUser(undefined);
+          }}
+        />
+      )}
+
     </UserTableContainer>
   );
 };

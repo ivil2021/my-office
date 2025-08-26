@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import useSWR, { mutate } from 'swr';
-import { getAllUsers, createUser, editUser } from '../../api/user';
-import { useState } from 'react';
+import { mutate } from 'swr';
+import { createUser, editUser } from '../../api/user';
+import type { IUser } from "../../entities/user";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -26,20 +26,19 @@ const validationSchema = Yup.object().shape({
     .required('Email обязателен')
 });
 
-export function useCreateAndEditUser() {
-  const [editingUserId, setEditingUserId] = useState<number | null>(null);
+interface IUseCreateAndEditUser {
+  user?: IUser;
+  onClose: () => void;
+}
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => setIsModalOpen(true);
-  const hideModal = () => setIsModalOpen(false);
-
+export function useCreateAndEditUser({ user, onClose }: IUseCreateAndEditUser) {
   const form = useFormik({
     initialValues: {
-      name: '',
-      lastName: '',
-      age: '',
-      phone: '',
-      email: ''
+      name: user?.name || '',
+      lastName: user?.lastName || '',
+      age: user?.age || '',
+      phone: user?.phone || '',
+      email: user?.email || ''
     },
     onSubmit: () => {},
     validationSchema
@@ -56,10 +55,8 @@ export function useCreateAndEditUser() {
     form.setValues(newValues);
   };
 
-  const { data: users } = useSWR( 'users', getAllUsers );
-
   async function handleOk() {
-    if (!editingUserId) {
+    if (!user?.id) {
       await createUser({
         name: form.values.name,
         lastName: form.values.lastName,
@@ -69,11 +66,11 @@ export function useCreateAndEditUser() {
       });
       await mutate('users');
 
-      hideModal();
+      onClose();
     } else {
       try {
         await editUser({
-          id: editingUserId,
+          id: user?.id,
           name: form.values.name,
           lastName: form.values.lastName,
           age: form.values.age,
@@ -82,26 +79,16 @@ export function useCreateAndEditUser() {
         });
         await mutate('users');
 
-        setEditingUserId(null);
-        hideModal();
+        onClose();
       } catch (error) {
         console.error('Ошибка при обновлении данных пользователя', error);
       }
     }
   };
 
-  function handleCancel() {
-    setEditingUserId(null);
-    hideModal();
-  };
-
   return {
     form,
     setFormValues,
-    users,
     handleOk,
-    showModal,
-    isModalOpen,
-    handleCancel
   }
 };
