@@ -58,7 +58,7 @@ export function UserTable () {
         dataIndex: 'actions',
         render: (_, record) => (
           <Space size="middle">
-            <Button type="text" icon={<EditOutlined />} onClick={() => {setSelectedUser(record); createAndEditUserModalController.open}} />
+            <Button type="text" icon={<EditOutlined />} onClick={() => {setSelectedUser(record); createAndEditUserModalController.open()}} />
             <Button type="text" icon={<DeleteOutlined />} onClick={() => handleDelete(record.id)} danger />
           </Space>
         ),
