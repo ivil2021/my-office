@@ -22,7 +22,8 @@ export function UserTable () {
     handleDelete,
     selectedUser,
     setSelectedUser,
-    createAndEditUserModalController
+    createAndEditUserModalController,
+    isUsersLoading
   } = useUserTable();
 
   const columns: ColumnsType<DataType> = useMemo(
@@ -80,6 +81,7 @@ export function UserTable () {
       <Table 
         columns={columns}
         dataSource={users}
+        loading={isUsersLoading}
         rowKey="id"
         pagination={{ pageSize:7 }}
         style={{ marginTop:50 }}

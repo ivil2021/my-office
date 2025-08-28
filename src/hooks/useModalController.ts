@@ -13,7 +13,6 @@ export function useModalController() {
       setMeta,
       toggle,
       dismiss,
-      open,
+      open
     };
   }
-  

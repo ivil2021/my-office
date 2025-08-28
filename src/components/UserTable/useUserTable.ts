@@ -9,7 +9,7 @@ export function useUserTable() {
 
   const createAndEditUserModalController = useModalController();
 
-  const { data: users } = useSWR( 'users', getAllUsers );
+  const { data: users, isValidating: isUsersLoading } = useSWR( 'users', getAllUsers );
 
   async function handleDelete(id: number) {
     try {
@@ -26,5 +26,6 @@ export function useUserTable() {
     selectedUser,
     setSelectedUser,
     createAndEditUserModalController,
+    isUsersLoading
   }
 };

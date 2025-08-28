@@ -89,6 +89,6 @@ export function useCreateAndEditUser({ user, onClose }: IUseCreateAndEditUser) {
   return {
     form,
     setFormValues,
-    handleOk,
+    handleOk
   }
 };
