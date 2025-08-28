@@ -57,16 +57,20 @@ export function useCreateAndEditUser({ user, onClose }: IUseCreateAndEditUser) {
 
   async function handleOk() {
     if (!user?.id) {
-      await createUser({
-        name: form.values.name,
-        lastName: form.values.lastName,
-        age: form.values.age,
-        phone: form.values.phone,
-        email: form.values.email
-      });
-      await mutate('users');
+      try {
+        await createUser({
+          name: form.values.name,
+          lastName: form.values.lastName,
+          age: form.values.age,
+          phone: form.values.phone,
+          email: form.values.email
+        });
+        await mutate('users');
 
-      onClose();
+        onClose();
+      } catch (error) {
+        console.error('Ошибка при создании пользователя', error);
+      }
     } else {
       try {
         await editUser({
