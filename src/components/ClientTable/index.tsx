@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 import { Table, Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { CreateAndEditUser } from '../../modals/user';
-import { UserTableContainer } from './index.styles';
-import { useUserTable } from "../../components/UserTable/useUserTable";
+import { CreateAndEditClient } from '../../modals/client';
+import { ClientTableContainer } from './index.styles';
+import { useClientTable } from "../../components/ClientTable/useClientTable";
 import { Link } from 'react-router-dom';
 
 interface DataType {
@@ -17,15 +17,15 @@ interface DataType {
   actions: string[];
 }
 
-export function UserTable () {
+export function ClientTable () {
   const {
-    users,
+    clients,
     handleDelete,
-    selectedUser,
-    setSelectedUser,
-    createAndEditUserModalController,
-    isUsersLoading
-  } = useUserTable();
+    selectedClient,
+    setSelectedClient,
+    createAndEditClientModalController,
+    isClientsLoading
+  } = useClientTable();
 
   const columns: ColumnsType<DataType> = useMemo(
     () => [
@@ -60,45 +60,45 @@ export function UserTable () {
         dataIndex: 'actions',
         render: (_, record) => (
           <Space size="middle">
-            <Button type="text" icon={<EditOutlined />} onClick={() => {setSelectedUser(record); createAndEditUserModalController.open()}} />
+            <Button type="text" icon={<EditOutlined />} onClick={() => {setSelectedClient(record); createAndEditClientModalController.open()}} />
             <Button type="text" icon={<DeleteOutlined />} onClick={() => handleDelete(record.id)} danger />
           </Space>
         ),
       }
     ],
-    [createAndEditUserModalController, handleDelete, setSelectedUser]
+    [createAndEditClientModalController, handleDelete, setSelectedClient]
   );
 
   return (
-    <UserTableContainer>
+    <ClientTableContainer>
       <Button 
         type="primary"
-        onClick={createAndEditUserModalController.open}
+        onClick={createAndEditClientModalController.open}
       >
-        Создать пользователя
+        Создать клиента
       </Button>
 
       <Table 
         columns={columns}
-        dataSource={users}
-        loading={isUsersLoading}
+        dataSource={clients}
+        loading={isClientsLoading}
         rowKey="id"
         pagination={{ pageSize:7 }}
         style={{ marginTop:50 }}
       />
 
-      {createAndEditUserModalController.isOpen && (
-        <CreateAndEditUser
-          user={selectedUser}
-          open={createAndEditUserModalController.isOpen}
+      {createAndEditClientModalController.isOpen && (
+        <CreateAndEditClient
+          client={selectedClient}
+          open={createAndEditClientModalController.isOpen}
           onClose={() => {
-            createAndEditUserModalController.dismiss();
-            setSelectedUser(undefined);
+            createAndEditClientModalController.dismiss();
+            setSelectedClient(undefined);
           }}
         />
       )}
 
       <li><Link to="/">На главную</Link></li>
-    </UserTableContainer>
+    </ClientTableContainer>
   );
 };
