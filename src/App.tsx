@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// import { Users } from './components/Users/Users';
 import { UserTable } from './components/UserTable';
 import { ClientTable } from './components/ClientTable';
 import { Layout } from './components/Layout/Layout';
@@ -11,8 +10,6 @@ export function App() {
         {/* Общий макет для всех страниц */}
         <Route path="/" element={<Layout />}>
           {/* Внутренние маршруты */}
-          {/* <Route index element={<Main />} */}
-          {/* <Route path="users" element={<Users />} /> */}
           <Route path="users" element={<UserTable />} />
           <Route path="clients" element={<ClientTable />} />
         </Route>
