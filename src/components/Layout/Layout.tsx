@@ -1,22 +1,36 @@
-import { Outlet, Link } from 'react-router-dom';
+import { Layout, Menu } from 'antd';
+import { Outlet, Link, useLocation } from 'react-router-dom';
+import { UserOutlined, TeamOutlined } from '@ant-design/icons';
 
-export function Layout() {
+const { Sider, Content } = Layout;
+
+export function LayoutComponent() {
+  const location = useLocation();
+
+  const selectedKey = location.pathname.startsWith('/clients')
+    ? 'clients'
+    : location.pathname.startsWith('/users')
+    ? 'users'
+    : '';
+
   return (
-    <div className="layout">
-      <div className="sidebar">
-        <nav>
-          <ul>
-            <li><Link to="/users">Пользователи</Link></li>
-            <li><Link to="/clients">Клиенты</Link></li>
-          </ul>
-        </nav>
-      </div>
+    <Layout style={{ minHeight: '100vh', width: '1000px' }}>
+      <Sider style={{ background: '#fff' }}>
+        <Menu theme="light" mode="inline" selectedKeys={[selectedKey]}>
+          <Menu.Item key="users" icon={<UserOutlined />}>
+            <Link to="/users">Пользователи</Link>
+          </Menu.Item>
+          <Menu.Item key="clients" icon={<TeamOutlined />}>
+            <Link to="/clients">Клиенты</Link>
+          </Menu.Item>
+        </Menu>
+      </Sider>
 
-      {/* Основной контент */}
-      <div className="content">
-      {/* сюда будет вставляться содержимое страниц */}
-        <Outlet /> 
-      </div>
-    </div>
+      <Layout>
+        <Content>
+          <Outlet />
+        </Content>
+      </Layout>
+    </Layout>
   );
 }

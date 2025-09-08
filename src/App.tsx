@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { UserTable } from './components/UserTable';
 import { ClientTable } from './components/ClientTable';
-import { Layout } from './components/Layout/Layout';
+import { LayoutComponent } from './components/Layout/Layout';
 
 export function App() {
   return (
     <BrowserRouter>
       <Routes>
         {/* Общий макет для всех страниц */}
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<LayoutComponent />}>
           {/* Внутренние маршруты */}
           <Route path="users" element={<UserTable />} />
           <Route path="clients" element={<ClientTable />} />
