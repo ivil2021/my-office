@@ -1,8 +1,9 @@
 import { Layout, Menu } from 'antd';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { UserOutlined, TeamOutlined } from '@ant-design/icons';
+import { StyledLayout, StyledSider } from './index.styles';
 
-const { Sider, Content } = Layout;
+const { Content } = Layout;
 
 export function LayoutComponent() {
   const location = useLocation();
@@ -14,8 +15,8 @@ export function LayoutComponent() {
     : '';
 
   return (
-    <Layout style={{ minHeight: '100vh', width: '1000px' }}>
-      <Sider style={{ background: '#fff' }}>
+    <StyledLayout>
+      <StyledSider>
         <Menu theme="light" mode="inline" selectedKeys={[selectedKey]}>
           <Menu.Item key="users" icon={<UserOutlined />}>
             <Link to="/users">Пользователи</Link>
@@ -24,13 +25,13 @@ export function LayoutComponent() {
             <Link to="/clients">Клиенты</Link>
           </Menu.Item>
         </Menu>
-      </Sider>
+      </StyledSider>
 
       <Layout>
         <Content>
           <Outlet />
         </Content>
       </Layout>
-    </Layout>
+    </StyledLayout>
   );
 }
