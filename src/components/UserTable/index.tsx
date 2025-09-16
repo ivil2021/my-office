@@ -98,7 +98,7 @@ export function UserTable () {
         />
       )}
 
-      <li><Link to="/">На главную</Link></li>
+      <Link to="/">На главную</Link>
     </UserTableContainer>
   );
 };
