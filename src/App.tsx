@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { UserTable } from './components/UserTable';
 import { ClientTable } from './components/ClientTable';
-import { LayoutComponent } from './components/Layout/Layout';
+import { LayoutComponent } from './components/Layout';
 
 export function App() {
   return (
