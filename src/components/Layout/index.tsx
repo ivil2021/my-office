@@ -17,26 +17,18 @@ export function LayoutComponent() {
     {
       key: 'users',
       label: 'Пользователи',
-      icon: <UserOutlined />,
+      icon: <UserOutlined />
     },
     {
       key: 'clients',
       label: 'Клиенты',
-      icon: <TeamOutlined />,
-    },
+      icon: <TeamOutlined />
+    }
   ];
 
   const keyToPathMap: Record<string, string> = {
     users: '/users',
-    clients: '/clients',
-  };
-
-  const onClick = ({ key }: { key: string }) => {
-    const path = keyToPathMap[key];
-
-    if (path) {
-      navigate(path);
-    }
+    clients: '/clients'
   };
 
   return (
@@ -45,7 +37,7 @@ export function LayoutComponent() {
         <Menu
           selectedKeys={currentRoute ? [currentRoute.key] : []}
           items={items}
-          onClick={onClick}
+          onClick={({ key }: { key: string }) => {const path = keyToPathMap[key]; if (path) {navigate(path)}}}
         />
       </StyledSider>
 

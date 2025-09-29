@@ -1,27 +1,26 @@
-import { useMemo } from "react";
 import { useLocation, matchPath } from 'react-router-dom';
 
 export function useRoutes() {
   const location = useLocation();
 
-  const currentRoute = useMemo(() => {
+  const currentRoute = () => {
     return ROUTES_ARR.find((route) =>
-      matchPath(route.route, location.pathname),
+      matchPath(route.route, location.pathname)
     );
-  }, [location.pathname]);
+  };
 
   return {
-    currentRoute,
+    currentRoute
   };
 };
 
 const ROUTES_ARR = [
   {
     key: 'users',
-    route: '/users',
+    route: '/users'
   },
   {
     key: 'clients',
-    route: '/clients',
-  },
+    route: '/clients'
+  }
 ];
