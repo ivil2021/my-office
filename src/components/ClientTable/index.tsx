@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { Table, Button, Space } from 'antd';
+import { Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { CreateAndEditClient } from '../../modals/client';
-import { ClientTableContainer } from './index.styles';
+import { ClientTableContainer, StyledTable, CreateButton } from './index.styles';
 import { useClientTable } from "../../components/ClientTable/useClientTable";
 import { Link } from 'react-router-dom';
 
@@ -71,14 +71,14 @@ export function ClientTable () {
 
   return (
     <ClientTableContainer>
-      <Button 
+      <CreateButton 
         type="primary"
         onClick={createAndEditClientModalController.open}
       >
         Создать клиента
-      </Button>
+      </CreateButton>
 
-      <Table 
+      <StyledTable 
         columns={columns}
         dataSource={clients}
         loading={isClientsLoading}
