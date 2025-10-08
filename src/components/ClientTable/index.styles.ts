@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { Button, Table } from 'antd';
+import Link from 'antd/es/typography/Link';
+// import Link from 'antd/es/typography/Link';
 
 export const ClientTableContainer = styled.div`
   margin: 0 auto;
@@ -292,3 +294,24 @@ export const CreateButton = styled(Button)`
     box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
   }
 `;
+
+// export const MinimalHomeLink = styled(Link)`
+//   display: inline-flex;
+//   align-items: center;
+//   justify-content: center;
+//   margin-top: 20px;
+//   padding: 8px 16px;
+//   background: transparent;
+//   border: 2px solid #1890ff;
+//   border-radius: 6px;
+//   color: #1890ff;
+//   text-decoration: none;
+//   font-weight: 500;
+//   transition: all 0.3s ease;
+  
+//   &:hover {
+//     background: #1890ff;
+//     color: white;
+//     transform: translateY(-1px);
+//   }
+// `;

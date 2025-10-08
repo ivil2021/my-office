@@ -30,7 +30,10 @@ const validationSchema = Yup.object().shape({
     .required('Номер телефона обязателен'),
   email: Yup.string()
     .matches(emailRegex, 'Некорректный формат email')
-    .required('Email обязателен')
+    .required('Email обязателен'),
+  placeOfStudy: Yup.string()
+    .min(3, 'Место учебы должно быть не меньше 3 символов!')
+    .required('Место учебы обязательно')
 });
 
 interface IUseCreateAndEditUser {
@@ -45,7 +48,8 @@ export function useCreateAndEditUser({ user, onClose }: IUseCreateAndEditUser) {
       lastName: user?.lastName || '',
       age: user?.age || '',
       phone: user?.phone || '',
-      email: user?.email || ''
+      email: user?.email || '',
+      placeOfStudy: user?.placeOfStudy || ''
     },
     onSubmit: () => {},
     validationSchema
@@ -58,6 +62,7 @@ export function useCreateAndEditUser({ user, onClose }: IUseCreateAndEditUser) {
       age: string;
       phone: string;
       email: string;
+      placeOfStudy: string;
     }) => {
     form.setValues(newValues);
   };
@@ -70,7 +75,8 @@ export function useCreateAndEditUser({ user, onClose }: IUseCreateAndEditUser) {
           lastName: form.values.lastName,
           age: form.values.age,
           phone: form.values.phone,
-          email: form.values.email
+          email: form.values.email,
+          placeOfStudy: form.values.placeOfStudy
         });
         await mutate('users');
 
@@ -87,6 +93,7 @@ export function useCreateAndEditUser({ user, onClose }: IUseCreateAndEditUser) {
           age: form.values.age,
           phone: form.values.phone,
           email: form.values.email,
+          placeOfStudy: form.values.placeOfStudy
         });
         await mutate('users');
 

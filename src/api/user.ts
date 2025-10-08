@@ -16,13 +16,14 @@ interface ICreateUser {
   age: string;
   phone: string;
   email: string;
+  placeOfStudy: string;
 }
 
-export async function createUser({ name, lastName, age, phone, email }: ICreateUser) {
+export async function createUser({ name, lastName, age, phone, email, placeOfStudy }: ICreateUser) {
   try {
     const response = await axios.post(
       'https://68586580138a18086dfadfb1.mockapi.io/users',
-      { name, lastName, age, phone, email },
+      { name, lastName, age, phone, email, placeOfStudy },
       {
         headers: {
           'Content-Type': 'application/json',
@@ -57,12 +58,13 @@ interface IEditUser {
   age: string;
   phone: string;
   email: string;
+  placeOfStudy: string;
 }
 
-export async function editUser({ id, name, lastName, age, phone, email }: IEditUser) {
+export async function editUser({ id, name, lastName, age, phone, email, placeOfStudy }: IEditUser) {
   try {
     const response = await axios.put(`https://68586580138a18086dfadfb1.mockapi.io/users/${id}`,
-      { name, lastName, age, phone, email },
+      { name, lastName, age, phone, email, placeOfStudy },
       {
         headers: { 'Content-Type': 'application/json' },
       }

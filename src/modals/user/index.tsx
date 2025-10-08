@@ -99,6 +99,22 @@ export function CreateAndEditUser({
             </TextError>
           )}
         </div>
+
+        <div>
+          <label htmlFor="placeOfStudy">Место учебы: </label>
+          <input
+            name="placeOfStudy"
+            value={form.values.placeOfStudy}
+            onChange={form.handleChange}
+            onBlur={form.handleBlur}
+            disabled={!form.values.name || Boolean(form.errors.name)}
+          />
+          {form.errors.placeOfStudy && form.touched.placeOfStudy && (
+            <TextError>
+              <div>{form.errors.placeOfStudy}</div>
+            </TextError>
+          )}
+        </div>
       </FormContainer>
     </Modal>
   );

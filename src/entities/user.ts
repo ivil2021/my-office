@@ -5,4 +5,5 @@ export interface IUser {
   age: string;
   phone: string;
   email: string;
+  placeOfStudy: string;
 }

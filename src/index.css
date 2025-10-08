@@ -78,10 +78,10 @@ button:focus-visible {
 }
 
 .content {
-  margin-left: 10px;
-  background-color: lightgreen;
+  /* margin-left: 100px; */
+  /* background-color: lightgreen; */
   /* padding: 20px; */
-  border-radius: 10px;
+  /* border-radius: 10px; */
   /* min-width: none; */
-  width: 800px;
+  /* width: 100%; */
 }
