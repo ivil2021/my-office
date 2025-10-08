@@ -33,6 +33,7 @@ const validationSchema = Yup.object().shape({
     .required('Email обязателен'),
   placeOfStudy: Yup.string()
     .min(3, 'Место учебы должно быть не меньше 3 символов!')
+    .matches(noSpecialSymbolsRegex, 'Место учебы не должно содержать специальных символов')
     .required('Место учебы обязательно')
 });
 
@@ -51,8 +52,23 @@ export function useCreateAndEditUser({ user, onClose }: IUseCreateAndEditUser) {
       email: user?.email || '',
       placeOfStudy: user?.placeOfStudy || ''
     },
-    onSubmit: () => {},
-    validationSchema
+    onSubmit: async (values) => {
+      // Форма автоматически валидируется перед вызовом onSubmit
+      try {
+        if (!user?.id) {
+          await createUser(values);
+        } else {
+          await editUser({ id: user.id, ...values });
+        }
+        await mutate('users');
+        onClose();
+      } catch (error) {
+        console.error('Ошибка при сохранении пользователя', error);
+      }
+    },
+    validationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
   });
 
   const setFormValues = (
@@ -67,41 +83,9 @@ export function useCreateAndEditUser({ user, onClose }: IUseCreateAndEditUser) {
     form.setValues(newValues);
   };
 
+  // Теперь handleOk просто вызывает submit формы
   async function handleOk() {
-    if (!user?.id) {
-      try {
-        await createUser({
-          name: form.values.name,
-          lastName: form.values.lastName,
-          age: form.values.age,
-          phone: form.values.phone,
-          email: form.values.email,
-          placeOfStudy: form.values.placeOfStudy
-        });
-        await mutate('users');
-
-        onClose();
-      } catch (error) {
-        console.error('Ошибка при создании пользователя', error);
-      }
-    } else {
-      try {
-        await editUser({
-          id: user?.id,
-          name: form.values.name,
-          lastName: form.values.lastName,
-          age: form.values.age,
-          phone: form.values.phone,
-          email: form.values.email,
-          placeOfStudy: form.values.placeOfStudy
-        });
-        await mutate('users');
-
-        onClose();
-      } catch (error) {
-        console.error('Ошибка при обновлении данных пользователя', error);
-      }
-    }
+    await form.submitForm();
   };
 
   return {

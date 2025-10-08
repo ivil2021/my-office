@@ -14,7 +14,6 @@ interface DataType {
   age: string;
   phone: string;
   email: string;
-  placeOfStudy: string;
   actions: string[];
 }
 
@@ -54,11 +53,6 @@ export function ClientTable () {
         title: 'Email',
         dataIndex: 'email',
         key: 'email',
-      },
-      {
-        title: 'Место учебы',
-        dataIndex: 'placeOfStudy',
-        key: 'placeOfStudy',
       },
       {
         title: 'Действия',

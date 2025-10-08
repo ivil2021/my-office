@@ -2,13 +2,11 @@ import { Layout, Menu } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { UserOutlined, TeamOutlined } from '@ant-design/icons';
 import { StyledLayout, StyledSider } from './index.styles';
-import { useRoutes } from "../../hooks/useRoutes";
 import type { MenuProps } from 'antd';
 
 const { Content } = Layout;
 
 export function LayoutComponent() {
-  // const { currentRoute } = useRoutes();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -50,17 +48,14 @@ export function LayoutComponent() {
     <StyledLayout>
       <StyledSider>
         <Menu
-          // selectedKeys={currentRoute ? [currentRoute.key] : []}
           selectedKeys={getSelectedKeys()}
           items={items}
-          // onClick={({ key }: { key: string }) => {const path = keyToPathMap[key]; if (path) {navigate(path)}}}
           onClick={({ key }: { key: string }) => {
             const path = keyToPathMap[key];
             if (path) {
               navigate(path);
             }
           }}
-          // mode="inline"
         />
       </StyledSider>
 
